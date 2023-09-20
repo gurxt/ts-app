@@ -1,4 +1,6 @@
 import express from 'express';
+import "./db"
+import Note, { INote } from "./models/note";
 
 const app = express();
 
@@ -10,19 +12,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.post("/", (req, res) => {
-  res.json({
-    message: "I am listening..."
-  })
-  console.log(req.body);
+  console.log("tim zoleta");
 })
 
-app.post("/create", (req, res) => {
-  res.json({
-    message: "I am listening..."
+app.post("/create", async (req, res) => {
+  await Note.create<INote>({
+    title: req.body.title, 
+    description: req.body.description 
   })
-  console.log(req.body);
-})
+  res.json({ message: "[INFO] listening to create."});
+});
 
 app.listen(8000, () => {
-  console.log("listening...");
+  console.log("[INFO] listening on port 8000");
 })
