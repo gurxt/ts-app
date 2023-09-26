@@ -3,9 +3,10 @@ import { FC } from "react";
 interface ICustomButton {
   title: string;
   type?: "danger" | "normal" | "regular";
+  onClick?(): void;
 }
 
-const CustomButton: FC<ICustomButton> = ({ title, type }) => {
+const CustomButton: FC<ICustomButton> = ({ title, type, onClick }) => {
   let color;
 
   switch(type) {
@@ -15,7 +16,7 @@ const CustomButton: FC<ICustomButton> = ({ title, type }) => {
   }
 
   return (
-    <button className={ color + " text-white p-2 rounded-lg w-16" }>
+    <button onClick={onClick} className={ color + " text-white p-2 rounded-lg w-16" }>
       { title }
     </button>
   )
