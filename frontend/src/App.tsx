@@ -1,30 +1,17 @@
+import NoteApplication from "./components/NoteApplication"
+import NoteItem from "./components/NoteItem"
+
 const App = () => {
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-5 space-y-4">
-      <h1 className="font-semibold text-2xl text-blue-400">
-        Note Application
-      </h1>
-      <div>
-        <input 
-          className="w-full border-b-2 border-gray-700 outline-none"  
-          placeholder="Title" 
-          type="text" 
-        />
-      </div>
-      <div>
-        <textarea 
-          className="w-full h-36 border-b-2 border-gray-700 outline-none resize-none"
-          placeholder="Description"
-        >
-        </textarea>
-      </div>
-      <div className="text-right">
-        <button className="bg-blue-500 text-white px-5 py-2 rounded-lg">
-          Submit
-        </button>
-      </div>
+    <div className="h-[100vh] w-[100vw] bg-slate-700 space-y-2 pt-2 overflow-x-hidden overflow-y-auto" >
+      <NoteApplication />
+      <NoteItem title="I love my tim" />
+      <NoteItem title="Yes, indeed I do." />
+      <NoteItem title="One day, he will leave my side." />
+      <NoteItem title="It will be a dark day indeed." />
     </div>
-  )
-}
+  );
+};
+
 
 export default App
