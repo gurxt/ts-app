@@ -1,7 +1,17 @@
-import { useState, ChangeEventHandler } from "react"
+import { useState, ChangeEventHandler, FC, Dispatch, SetStateAction } from "react"
 import axios from "axios";
 
-const NoteApplication = () => {
+interface INote {
+  id: string;
+  title: string;
+  description?: string;
+}
+interface INoteApplication {
+  notes: INote[];
+  setNotes: Dispatch<SetStateAction<INote[]>>;
+}
+
+const NoteApplication: FC<INoteApplication> = ({ notes, setNotes }) => {
   const [values, setValues] = useState({
     title: "",
     description: ""
@@ -24,7 +34,8 @@ const NoteApplication = () => {
             description: values.description
           }
         );
-        console.log(data);
+        setNotes([data.note, ...notes]);
+        setValues({title: '', description: ''});
       }}
     >
       <h1 className="font-semibold text-2xl text-blue-400">
@@ -51,10 +62,7 @@ const NoteApplication = () => {
         </textarea>
       </div>
       <div className="text-right">
-        <button 
-          className="bg-blue-500 text-white px-5 py-2 rounded-lg"
-          onClick={() => console.log(values.title, values.description)}
-        >
+        <button className="bg-blue-500 text-white px-5 py-2 rounded-lg">
           Submit
         </button>
       </div>
