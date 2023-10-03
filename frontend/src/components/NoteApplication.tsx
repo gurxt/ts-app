@@ -1,4 +1,5 @@
-import { useState, ChangeEventHandler, FC, Dispatch, SetStateAction } from "react"
+import { useState, ChangeEventHandler, FC, Dispatch, SetStateAction } from "react";
+import NoteItem from "./NoteItem";
 import axios from "axios";
 
 interface INote {
@@ -17,16 +18,41 @@ const NoteApplication: FC<INoteApplication> = ({ notes, setNotes }) => {
     description: ""
   });
 
+  const [selectedNoteId, setSelectedNoteId] = useState("");
+
+  const [noteToView, setNoteToView] = useState<INote>();
+
   const handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = ({ target }) => {
     const { name, value } = target;
     setValues(prev => ({...prev, [name]: value }));
   };
 
   return (
+    <>
     <form 
       className="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-5 space-y-4"
       onSubmit={async (e) => {
         e.preventDefault();
+
+        if (selectedNoteId) {
+          const { data } = await axios.patch(
+            `http://localhost:8000/note/${selectedNoteId}`,
+            {
+              title: values.title,
+              description: values.description
+            }
+          );
+          setNotes(notes.map(note => {
+            if (note.id === selectedNoteId) {
+              note.title = data.note.title;
+              note.description = data.note.description;
+            }
+            return note;
+          }));
+          setSelectedNoteId("");
+          return;
+        } 
+
         const { data } = await axios.post(
           'http://localhost:8000/note/create',
           {
@@ -34,6 +60,7 @@ const NoteApplication: FC<INoteApplication> = ({ notes, setNotes }) => {
             description: values.description
           }
         );
+        
         setNotes([data.note, ...notes]);
         setValues({title: '', description: ''});
       }}
@@ -67,6 +94,27 @@ const NoteApplication: FC<INoteApplication> = ({ notes, setNotes }) => {
         </button>
       </div>
     </form>
+    { notes.map((note) => (
+      <NoteItem 
+        key={note.id} 
+        title={note.title} 
+        description={note.id === noteToView?.id ? noteToView?.description : ""}
+        onEditClick={() => {
+          setSelectedNoteId(note.id);
+          setValues({ title: note.title, description: note.description || '' })
+        }} 
+        onDeleteClick={async () => {
+          if (confirm("Are you sure?")) {
+            // delete
+            await axios.delete(`http://localhost:8000/note/${note.id}`);
+            setNotes(notes.filter(_note => _note.id !== note.id ));
+          }
+        }}
+        onViewClick={() => setNoteToView(note)}
+        onHideClick={() => setNoteToView({ id: "", title: "", description: ""})}
+      />
+    ))}
+    </>
   );
 };
 

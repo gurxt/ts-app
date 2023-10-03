@@ -32,7 +32,13 @@ export const patchNote: RequestHandler = async (req, res) => {
   if (!note) return;
   await note.save()
 
-  res.json({ note });
+  res.json({ 
+    note: { 
+      id: note._id,
+      title: note.title,
+      description: note.description
+    }
+  });
 }
 
 export const deleteNote: RequestHandler = async (req, res) => { 

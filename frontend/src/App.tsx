@@ -20,10 +20,7 @@ const App = () => {
 
   return (
     <div className="h-[100vh] w-[100vw] bg-slate-700 space-y-2 pt-2 overflow-x-hidden overflow-y-auto" >
-      <NoteApplication notes={notes} setNotes={setNotes}/>
-      { notes.map((note) => (
-        <NoteItem key={note.id} title={note.title} />
-      ))}
+      <NoteApplication notes={notes} setNotes={setNotes} />
     </div>
   );
 };
